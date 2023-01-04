@@ -9,11 +9,8 @@ function App() {
 
   const load = async () => {
     try {
-      const areaData = await getAreaData()
-
-      areas.concat(areaData);
-  
-      setAreas(areas);
+      const areaData = await getAreaData();
+      setAreas(areaData);
     } catch (error) {
       window.alert("todo: fix app")
     }

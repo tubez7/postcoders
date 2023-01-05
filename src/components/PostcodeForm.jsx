@@ -1,6 +1,5 @@
 export default function PostcodeForm({ setPostcode }) {
   let postcodeStr = "";
-
   
   const handleChange = (e) => {
     postcodeStr = e.target.value;

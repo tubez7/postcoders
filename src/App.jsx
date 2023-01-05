@@ -14,13 +14,20 @@ function App() {
     try {
       const areaData = await getAreaData(postcode);
       setAreas(areaData);
+      let dataString = JSON.stringify(areaData);
+      sessionStorage[postcode] = dataString;
     } catch (error) {
       window.alert("todo: fix app");
     }
   };
 
   useEffect(() => {
-    load();
+    if (sessionStorage[postcode]) {
+      const cachedAreas = JSON.parse(sessionStorage[postcode]);
+      setAreas(cachedAreas);
+    } else {
+      load();
+    }
   }, [postcode]);
 
   return (

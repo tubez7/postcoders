@@ -10,3 +10,8 @@
   width: 90vw;
   border: solid grey 2px;
 }
+
+.postcode-form {
+  max-width: 280px;
+  margin: auto;
+}

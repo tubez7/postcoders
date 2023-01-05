@@ -3,11 +3,12 @@ import { getAreaData } from "./api";
 
 import "./App.css";
 
+import AreaCard from "./components/AreaCard";
+import PostcodeForm from "./components/PostcodeForm";
+
 function App() {
   const [areas, setAreas] = useState([]);
   const [postcode, setPostcode] = useState("BB10");
-
-  let postcodeStr = "";
 
   const load = async () => {
     try {
@@ -18,16 +19,6 @@ function App() {
     }
   };
 
-  const handleChange = (e) => {
-    postcodeStr = e.target.value;
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    setPostcode(postcodeStr);
-    postcodeStr = "";
-  };
-
   useEffect(() => {
     load();
   }, [postcode]);
@@ -35,26 +26,23 @@ function App() {
   return (
     <div className="App">
       <h1>Postcoders</h1>
-      <form className="postcode-form">
-        <fieldset>
-          <p>
-            Please enter an outcode to search
-            <br />
-            eg - "M1” rather than “M1 7ED”
-          </p>
-          <label htmlFor="postcode">Postcode: </label>
-          <input
-            type="text"
-            id="postcode"
-            name="postcode"
-            placeholder="Enter a postcode..."
-            onChange={handleChange}
-          />
-          <br />
-          <button onClick={handleSubmit}>Submit</button>
-        </fieldset>
-      </form>
+      <PostcodeForm setPostcode={setPostcode} />
       <h2>{`Areas for ${postcode}: ${areas.length}`}</h2>
+     
+      <div className="area-cards">
+        {areas.map((area) => {
+          return (
+            <AreaCard
+              key={area["place name"]}
+              abbreviation={area["state abbreviation"]}
+              placeName={area["place name"]}
+              state={area.state}
+              longitude={area.longitude}
+              latitude={area.latitude}
+            />
+          );
+        })}
+      </div>
     </div>
   );
 }

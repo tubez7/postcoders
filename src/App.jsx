@@ -1,34 +1,57 @@
-import { useEffect, useState } from 'react'
-import { getAreaData } from './api'
+import { useEffect, useState } from "react";
+import { getAreaData } from "./api";
 
-import './App.css'
+import "./App.css";
+
+import AreaCard from "./components/AreaCard";
+import PostcodeForm from "./components/PostcodeForm";
 
 function App() {
-
   const [areas, setAreas] = useState([]);
+  const [postcode, setPostcode] = useState("BB10");
 
   const load = async () => {
     try {
-      const areaData = await getAreaData()
-
-      areas.concat(areaData);
-  
-      setAreas(areas);
+      const areaData = await getAreaData(postcode);
+      setAreas(areaData);
+      let dataString = JSON.stringify(areaData);
+      sessionStorage[postcode] = dataString;
     } catch (error) {
-      window.alert("todo: fix app")
+      window.alert("todo: fix app");
     }
-  }
+  };
 
   useEffect(() => {
-    load();
-  }, []);
+    if (sessionStorage[postcode]) {
+      const cachedAreas = JSON.parse(sessionStorage[postcode]);
+      setAreas(cachedAreas);
+    } else {
+      load();
+    }
+  }, [postcode]);
 
   return (
     <div className="App">
       <h1>Postcoders</h1>
-      <h2>{`Areas for BB10: ${areas.length}`}</h2>
+      <PostcodeForm setPostcode={setPostcode} />
+      <h2>{`Areas for ${postcode}: ${areas.length}`}</h2>
+     
+      <div className="area-cards">
+        {areas.map((area) => {
+          return (
+            <AreaCard
+              key={area["place name"]}
+              abbreviation={area["state abbreviation"]}
+              placeName={area["place name"]}
+              state={area.state}
+              longitude={area.longitude}
+              latitude={area.latitude}
+            />
+          );
+        })}
+      </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
